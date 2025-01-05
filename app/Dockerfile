@@ -1,14 +1,8 @@
 # Use an official Node.js runtime as a parent image
-FROM node:22.12.0-alpine AS angular-node
+FROM node:22.12.0-alpine
 
 WORKDIR /app
-
-COPY . .
-RUN npm install
-RUN npm run build
-
-FROM httpd:2.4.62-alpine3.21
-
-WORKDIR /usr/local/apache2/htdocs
-COPY --from=angular-node /app/dist/myapp .
-
+COPY package.json /app/package.json
+RUN npm install && npm install -g @angular/cli@19.0.6
+COPY . /app
+CMD ng serve --host 0.0.0.0
